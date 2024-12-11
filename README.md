@@ -23,7 +23,7 @@ The dataset, sourced from food.com, includes over 83,000 recipes and nearly 732,
 
 ### This is a description of what the recipes dataframe contains (83782 rows):
 
-|    Column  |  Desciption |
+|    Column  |  Description |
 |-----------:|------------:|
 |    'name' |       Recipe name |
 |     'id' |       Recipe ID |
@@ -37,7 +37,7 @@ The dataset, sourced from food.com, includes over 83,000 recipes and nearly 732,
 
 ### This is a description of what the reviews dataframe contains (731927 rows):
 
-|    Column  |  Desciption |
+|    Column  |  Description |
 |-----------:|------------:|
 |    'user_id' |       User ID |
 |     'recipe_id' |       Recipe ID |
@@ -99,6 +99,11 @@ The scatter plot of Calories vs. Fat shows a clear positive trend, as recipes wi
 | 600-800            | 4.62           | 5.0              | 0.63          | 55.35        | 56.0           | 22.47       | 6,556            |
 | 800-1000           | 4.63           | 5.0              | 0.64          | 75.29        | 76.0           | 30.39       | 3,034            |
 | 1000+              | 4.61           | 5.0              | 0.68          | 116.04       | 112.0          | 59.66       | 3,242            |
+
+There is a clear positive correlation between calorie content and fat content. As calorie buckets increase, the Fat Mean, Fat Median, and Fat Std also increase:
+Recipes in the 0-200 calorie bucket have an average fat content of ~7.02.
+Recipes in the 1000+ calorie bucket have a much higher average fat content of ~116.04.
+Significance: Fat is calorie-dense (9 calories per gram), and its increase across buckets is expected. This pattern confirms that fat contributes significantly to higher calorie counts.
 
 <!-- #endregion -->
 <!-- #region -->
@@ -169,7 +174,6 @@ R² (Coefficient of Determination): Indicates how well our model explains the va
 # Baseline Model <a name="baselinemodel"></a>
 
 - **Description**: In our baseline model, we utilized three predictor features: **'protein', 'total_fat', and 'sodium'**, all of which are quantitative continuous variables. These features provide numerical representations of the nutritional content of each recipe. For this model, no categorical transformation was required, and all features were retained as raw numerical values.
-
   
 - **Feature Transformations**: We applied Standard Scaling Transformation to the predictor features ('protein', 'total_fat', and 'sodium'). Using the `StandardScaler`, each feature was standardized by subtracting the mean and dividing by the standard deviation, ensuring the features were on the same scale to avoid bias in the Linear Regression model.
   
@@ -200,7 +204,7 @@ For our final model, we transitioned from the Linear Regression model to a **Ran
     - Adding more features such as **nutritional information** helps the model distinguish different types of food. For example, high-sugar foods (e.g., desserts) often correlate with higher calorie counts.
     - Avoiding binary categorization of features (e.g., `sugar > x`) preserves the full range of quantitative information, which is crucial for predicting continuous variables like calories.
 
-## Algorithm and Hyperaparmeters 
+## Algorithm and Hyperparameters 
 We chose the **Random Forest Regressor** for its ability to handle non-linear relationships, reduced susceptibility to overfitting compared to individual decision trees, and effectiveness in modeling complex datasets.
 
 We used **GridSearchCV** for hyperparameter tuning to identify the most optimal combination of parameters. The final model utilized the following hyperparameters:
