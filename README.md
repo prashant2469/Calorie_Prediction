@@ -179,11 +179,12 @@ R² (Coefficient of Determination): Indicates how well our model explains the va
 
 - The evaluation metrics are shown below:
 
-| **Metric** | **Train Score**        | **Test Score**         |
-|------------|------------------------|------------------------|
-| RMSE       | 131.235069003145       | 129.7759699948962      |
-| R^2        | 0.769096286182156      | 0.7761151736234765     |
-| MAE        | 89.3058016808985       | 88.33372628275863      |
+| **Metric** | **Train Score**       | **Test Score**        |
+|------------|-----------------------|-----------------------|
+| RMSE       | 131.235069003145    | 129.7759699948962    |
+| R^2        | 0.769096286182156    | 0.7761151736234765    |
+| MAE        | 89.3058016808985    | 88.33372628275863      |
+
 <!-- #endregion -->
 
 # Final Model <a name="finalmodel"></a>
