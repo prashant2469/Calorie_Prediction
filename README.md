@@ -7,7 +7,9 @@ This data science project, conducted at UCSD, focuses on examining how nutrition
 # Table of Contents
 - [Introduction](#introduction)
 - [Data Cleaning and Exploratory Data Analysis](#datacleaning)
-- [Framing the Problem](#framingtheproblem)
+- [Assessment of Missingness](#nmaranalysis)
+- [Hypothesis Testing](#hypothesistesting)
+- [Framing a Prediction Problem](#framingpredictionproblem)
 - [Baseline Model](#baselinemodel)
 - [Final Model](#finalmodel)
 - [Fairness Analysis](#fairnessanalysis)
@@ -87,16 +89,16 @@ The scatter plot of Calories vs. Fat shows a clear positive trend, as recipes wi
 
 # Interesting Aggregates <a name="interestingaggregates"></a>
 
-### Here we are aggregating the recipes by calorie buckets and analyzing how the average rating and fat content vary within each group.
+### Aggregating recipes by calorie buckets to analyze how average ratings and fat content vary within each group:
 
-| Calorie Bucket   | Rating Mean   | Rating Median   | Rating Std   | Fat Mean   | Fat Median   | Fat Std   | Recipe Count   |
-|:-----------------|:-------------:|:---------------:|:------------:|:----------:|:------------:|:---------:|:--------------:|
-| 0-200            | 4.634017      | 5.0             | 0.642686     | 7.023122   | 6.0          | 6.286557  | 24868          |
-| 200-400          | 4.621413      | 5.0             | 0.640466     | 20.126607  | 19.0         | 11.120862 | 27305          |
-| 400-600          | 4.621188      | 5.0             | 0.628379     | 36.603547  | 36.0         | 16.093335 | 14771          |
-| 600-800          | 4.621446      | 5.0             | 0.628640     | 55.345790  | 56.0         | 22.465911 | 6556           |
-| 800-1000         | 4.631750      | 5.0             | 0.639777     | 75.289387  | 76.0         | 30.388885 | 3034           |
-| 1000+            | 4.613146      | 5.0             | 0.681995     | 116.044725 | 112.0        | 59.662950 | 3242           |
+| **Calorie Bucket** | **Rating Mean** | **Rating Median** | **Rating Std** | **Fat Mean** | **Fat Median** | **Fat Std** | **Recipe Count** |
+|---------------------|-----------------|-------------------|----------------|--------------|----------------|------------|------------------|
+| 0-200              | 4.63           | 5.0              | 0.64          | 7.02         | 6.0            | 6.29       | 24,868           |
+| 200-400            | 4.62           | 5.0              | 0.64          | 20.13        | 19.0           | 11.12      | 27,305           |
+| 400-600            | 4.62           | 5.0              | 0.63          | 36.60        | 36.0           | 16.09      | 14,771           |
+| 600-800            | 4.62           | 5.0              | 0.63          | 55.35        | 56.0           | 22.47      | 6,556            |
+| 800-1000           | 4.63           | 5.0              | 0.64          | 75.29        | 76.0           | 30.39      | 3,034            |
+| 1000+              | 4.61           | 5.0              | 0.68          | 116.04       | 112.0          | 59.66      | 3,242            |
 <!-- #endregion -->
 <!-- #region -->
 # Assessment of Missingness <a name="nmaranalysis"></a>
@@ -123,7 +125,6 @@ The observed difference in calorie means between recipes with and without descri
 <!-- #region -->
 
 # Hypothesis Testing <a name="hypothesistesting"></a>
-## Permutation Test for correlation between protein content and average rating:
 
 To investigate the difference in calorie distributions between high-fat and low-fat recipes, we performed a Kolmogorov-Smirnov (KS) test. This test is designed to determine whether two samples are drawn from the same distribution.
 
@@ -136,7 +137,7 @@ To investigate the difference in calorie distributions between high-fat and low-
 
 **Significance Level**: To ensure the accuracy of our findings, we selected a significance level of 5% for this test.
 
-The plot below showcases the coorelation from permutation testing of our test statics in 10000 permutations
+The plot below showcases the correlation from permutation testing of our test statics in 10000 permutations
 <iframe src="assets/ks_test_permutation_plotly.html" width=800 height=600 frameBorder=0></iframe>
 
 KS-statistic: 0.6957
@@ -147,7 +148,7 @@ The observed p-value is below the significance level of 0.05, indicating that we
 <!-- #endregion -->
 
 <!-- #region -->
-# Framing a Prediction Problem <a name="framingtheproblem"></a>
+# Framing a Prediction Problem <a name="framingpredictionproblem"></a>
 In this project, our objective is to create a model that predicts the calorie count in a recipe based on its nutritional information. The dataset provides various nutritional features such as total fat, sugar, sodium, saturated fat, carbohydrates, and protein. Since the target variable, calories, is a continuous numeric value, this is a regression task. Our goal is to accurately estimate calorie counts for recipes, leveraging the given nutritional data.
 
 - **Response Variable**: The target variable for our model is **calories**, a crucial metric for individuals monitoring their dietary intake or managing fitness goals. Predicting calorie values is practical and valuable for recipes where such information might be missing, providing users with deeper insights into their food choices.
@@ -162,6 +163,104 @@ R² (Coefficient of Determination): Indicates how well our model explains the va
 - **Information Known**: At the time of prediction, we have access to all other nutrition features from the dataset (**total_fat, sugar, sodium, saturated fat, carbs, and protein**) except calories. By leveraging these features, we aim to predict the caloric content for recipes that do not provide it explicitly in their nutrition label.
 <!-- #endregion -->
 
+<!-- #region -->
+
+# Baseline Model <a name="baselinemodel"></a>
+
+- **Description**: In our baseline model, we utilized three predictor features: **'protein', 'total_fat', and 'sodium'**, all of which are quantitative continuous variables. These features provide numerical representations of the nutritional content of each recipe. For this model, no categorical transformation was required, and all features were retained as raw numerical values.
+
+  
+- **Feature Transformations**: We applied Standard Scaling Transformation to the predictor features ('protein', 'total_fat', and 'sodium'). Using the `StandardScaler`, each feature was standardized by subtracting the mean and dividing by the standard deviation, ensuring the features were on the same scale to avoid bias in the Linear Regression model.
+  
+  
+- **Performance**: The performance of the baseline Linear Regression model was evaluated using three metrics: RMSE (Root Mean Squared Error), R^2 (Coefficient of Determination), and MAE (Mean Absolute Error). The results showed that the model performed moderately well but left room for improvement in capturing the complexity of the data. Below are the metrics for both the training and test sets:
 
 
+- The evaluation metrics are shown below:
 
+| **Metric** | **Train Score**        | **Test Score**         |
+|------------|------------------------|------------------------|
+| RMSE       | 131.235069003145       | 129.7759699948962      |
+| R^2        | 0.769096286182156      | 0.7761151736234765     |
+| MAE        | 89.3058016808985       | 88.33372628275863      |
+<!-- #endregion -->
+
+# Final Model <a name="finalmodel"></a>
+For our final model, we transitioned from the Linear Regression model to a **Random Forest Regressor** due to the limitations of the baseline model in terms of performance, as seen in the evaluation metrics of **R^2, RMSE, and MAE**. The Random Forest Regressor was chosen because it handles non-linear relationships effectively, is robust to overfitting, and performs well on datasets with irrelevant features.
+
+- **Description**: Our final model uses additional features, including **'sugar', 'saturated fat', and 'carbs'**, which are all quantitative continuous variables. These were added based on domain knowledge and exploratory data analysis (EDA). Foods high in sugar and carbs are often calorie-dense but not high in protein, while foods high in saturated fat (e.g., meats) are often protein-rich. We determined that features like the number of minutes and average rating had weak correlations with calorie content during our EDA, so these features were excluded. The model still evaluates performance using **RMSE, MAE, and R^2**.
+  
+- **Feature Transformations**: 
+    - We applied the **Standard Scaling Transformation** to all features, including **'total_fat', 'sugar', 'sodium', 'saturated_fat', and 'carbs'**, to standardize their scales.
+    - Standardization was necessary to ensure that features with larger ranges did not disproportionately impact the model's performance. 
+     
+- **Reasons for Feature Selection**:
+    - Adding more features such as **nutritional information** helps the model distinguish different types of food. For example, high-sugar foods (e.g., desserts) often correlate with higher calorie counts.
+    - Avoiding binary categorization of features (e.g., `sugar > x`) preserves the full range of quantitative information, which is crucial for predicting continuous variables like calories.
+
+## Algorithm and Hyperaparmeters 
+We chose the **Random Forest Regressor** for its ability to handle non-linear relationships, reduced susceptibility to overfitting compared to individual decision trees, and effectiveness in modeling complex datasets.
+
+We used **GridSearchCV** for hyperparameter tuning to identify the most optimal combination of parameters. The final model utilized the following hyperparameters:
+- **Number of Estimators (n_estimators):** 100
+- **Maximum Depth of Trees (max_depth):** 20
+- **Maximum Features (max_features):** 'sqrt'
+
+These hyperparameters were determined to be the best after extensive cross-validation with the following grid:
+- Number of Estimators: [10, 50, 100]
+- Maximum Depth: [None, 10, 20, 30]
+- Maximum Features: ['auto', 'sqrt']
+
+## Performance
+
+The performance metrics for the final model are shown below:
+
+| **Metric** | **Train Score**       | **Test Score**        |
+|------------|-----------------------|-----------------------|
+| RMSE       | 25.857239211709327    | 56.812957282717086    |
+| R^2        | 0.9910361327416383    | 0.9570927297534016    |
+| MAE        | 16.197052614923212    | 35.5187800919846      |
+  
+### Comparison to Baseline Model
+- **RMSE**: The RMSE decreased significantly, showing improved accuracy in calorie prediction.
+- **R^2**: The R^2 value increased, indicating that the model explains a much larger proportion of variance in calorie content.
+- **MAE**: The MAE decreased, reflecting smaller average errors in predictions.
+<!-- #endregion -->
+
+<!-- #region -->
+# Fairness Analysis <a name="fairnessanalysis"></a>
+In this analysis, we are comparing the RMSE of two groups based on the **"minutes"** feature. Recipes are divided into two groups:
+- **Group X:** Recipes with cooking times less than the median value of the "minutes" feature.
+- **Group Y:** Recipes with cooking times greater than or equal to the median value of the "minutes" feature.
+
+
+RMSE is used as the evaluation metric to measure the prediction accuracy for each group. We aim to determine if there is a statistically significant difference in prediction accuracy between the two groups.
+
+### Hypotheses:
+- **Null Hypothesis (H₀):** The model is fair, and there is no significant difference in RMSE between recipes with shorter cooking times (Group X) and longer cooking times (Group Y).
+- **Alternative Hypothesis (Hₐ):** There is a significant difference in RMSE between recipes with shorter cooking times (Group X) and longer cooking times (Group Y).
+
+
+- **Test Statistic**: The test statistic is the **absolute difference in RMSE** between Group X and Group Y.
+
+
+- **Significance Level (Alpha)** : The significance level (**α**) is set at **0.05**.
+
+
+### Procedure:
+1. Compute the **observed RMSE difference** for the original groups.
+2. Perform a **permutation test** by randomly shuffling group labels (cooking times) and recomputing the RMSE difference for each permutation.
+3. Repeat the process **500 times** to create a null distribution of RMSE differences.
+4. Calculate the **p-value** by comparing the observed RMSE difference to the null distribution.
+
+### Results:
+- **Observed Difference in RMSE:** 70.5
+- **p-value from Permutation Test:** 0.0
+
+<iframe src="assets/permutation_fairness_plot.html" width=800 height=600 frameBorder=0></iframe>
+
+
+### Conclusion:
+The results of the permutation test suggest that there is a statistically significant difference in RMSE between recipes with shorter cooking times and longer cooking times. The observed difference in RMSE (70.5) indicates that the model performs much better for one group compared to the other. With a p-value of 0.0, which is below the significance level of 0.05, we reject the null hypothesis. This strong evidence against the null hypothesis indicates that the model is not fair across these groups. Further tuning and adjustments are required to improve the model's equity in predicting outcomes for recipes with varying cooking times.
+
+<!-- #endregion -->
