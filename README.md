@@ -98,6 +98,69 @@ The scatter plot of Calories vs. Fat shows a clear positive trend, as recipes wi
 | 800-1000         | 4.631750      | 5.0             | 0.639777     | 75.289387  | 76.0         | 30.388885 | 3034           |
 | 1000+            | 4.613146      | 5.0             | 0.681995     | 116.044725 | 112.0        | 59.662950 | 3242           |
 <!-- #endregion -->
+<!-- #region -->
+# Assessment of Missingness <a name="nmaranalysis"></a>
+We understand that "Not Missing at Random" (NMAR) implies a relationship between the tendency of a value to be missing and its value. In this case, we think the missingness in the description column of our dataset might be NMAR. It is plausible that recipes with missing descriptions are simpler or less significant dishes that were uploaded without much detail. Alternatively, users may omit descriptions for recipes they consider obvious or not worth elaborating on. This potential cause-and-effect relationship suggests NMAR might explain the missingness of the description column.
+
+
+
+# Missingness dependency <a name="missingnessdependency"></a>
+We wanted to test if there is a correlation between the missingness in the average_rating column and other features in the dataset. Specifically, we analyzed whether missingness in average_rating is dependent on calories. Based on the plot below and our permutation test, there appears to be a significant correlation between these variables.
+
+
+<iframe src="assets/permutation_calories_plotly_2.html" width=800 height=600 frameBorder=0></iframe>
+
+The observed difference in calorie means between recipes with and without average_rating was 87.86, with a p-value of 0.0. Since the p-value is below 0.05, we reject the null hypothesis and conclude that there is a significant correlation between the missingness in average_rating and calories. This suggests that recipes with higher calorie counts are less likely to have missing average ratings, likely due to their popularity or complexity drawing more user engagement.
+
+
+We also tested whether the missingness of the description column is dependent on calories. The results are shown below:
+
+<iframe src="assets/permutation_calories_plotly.html" width=800 height=600 frameBorder=0></iframe>
+
+The observed difference in calorie means between recipes with and without descriptions was 75.99, with a p-value of 0.254. Since the p-value is greater than 0.05, we fail to reject the null hypothesis. This suggests there is no significant correlation between the missingness of the description column and calories. The missingness in the description column is not influenced by the calorie content of the recipes.
+
+<!-- #endregion -->
+<!-- #region -->
+
+# Hypothesis Testing <a name="hypothesistesting"></a>
+## Permutation Test for correlation between protein content and average rating:
+
+To investigate the difference in calorie distributions between high-fat and low-fat recipes, we performed a Kolmogorov-Smirnov (KS) test. This test is designed to determine whether two samples are drawn from the same distribution.
+
+
+**Null Hypothesis (H0)**: The distributions of calories for high-fat and low-fat recipes are the same.
+
+**Alternative Hypothesis (Ha)**:  The distributions of calories for high-fat and low-fat recipes are different.
+
+**Test Statistics**: To evaluate whether the distributions of calories differ significantly between high-fat and low-fat recipes, we used the Kolmogorov-Smirnov (KS) test. The KS test is a non-parametric test that compares the cumulative distributions of two datasets to determine if they come from the same distribution. It is well-suited for comparing distributions, as it does not rely on assumptions of normality or equal variance.
+
+**Significance Level**: To ensure the accuracy of our findings, we selected a significance level of 5% for this test.
+
+The plot below showcases the coorelation from permutation testing of our test statics in 10000 permutations
+<iframe src="assets/ks_test_permutation_plotly.html" width=800 height=600 frameBorder=0></iframe>
+
+KS-statistic: 0.6957
+P-value: 0.0
+
+The observed p-value is below the significance level of 0.05, indicating that we reject the null hypothesis. This means there is strong evidence that the distributions of calories for high-fat and low-fat recipes are significantly different.
+
+<!-- #endregion -->
+
+<!-- #region -->
+# Framing a Prediction Problem <a name="framingtheproblem"></a>
+In this project, our objective is to create a model that predicts the calorie count in a recipe based on its nutritional information. The dataset provides various nutritional features such as total fat, sugar, sodium, saturated fat, carbohydrates, and protein. Since the target variable, calories, is a continuous numeric value, this is a regression task. Our goal is to accurately estimate calorie counts for recipes, leveraging the given nutritional data.
+
+- **Response Variable**: The target variable for our model is **calories**, a crucial metric for individuals monitoring their dietary intake or managing fitness goals. Predicting calorie values is practical and valuable for recipes where such information might be missing, providing users with deeper insights into their food choices.
+
+
+- **Evaluation Metrics**: Since we are solving a regression problem, we will evaluate our model using metrics such as RMSE, MAE, and R² values:
+RMSE (Root Mean Squared Error): Provides a measure of the average magnitude of prediction error, with larger penalties for significant deviations between predicted and actual values.
+MAE (Mean Absolute Error): Measures the average magnitude of the errors in a more interpretable way, without overly penalizing larger errors like RMSE does.
+R² (Coefficient of Determination): Indicates how well our model explains the variance in the calorie data. An R² value close to 1 suggests a strong fit to the data.
+
+
+- **Information Known**: At the time of prediction, we have access to all other nutrition features from the dataset (**total_fat, sugar, sodium, saturated fat, carbs, and protein**) except calories. By leveraging these features, we aim to predict the caloric content for recipes that do not provide it explicitly in their nutrition label.
+<!-- #endregion -->
 
 
 
